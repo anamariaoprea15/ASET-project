@@ -1,4 +1,4 @@
-# TAIP-project
+# ASET-project
 
 2023 project for Advanced Software Engineering Tehniques course at FII UAIC
 
