@@ -7,7 +7,7 @@ Prof. Dr. Tiplea Ferucio-Laurentiu
 ## Team members
 Enache-Stratulat Marius \
 Oprea Ana-Maria (anamariaoprea15@gmail.com) \
-Todireasa Alexandra-Elena
+Todireasa Alexandra-Elena (todireasa.alexandra.elena@gmail.com)
 
 ## Trello
 https://trello.com/b/EO2O5pHj/taip-project
