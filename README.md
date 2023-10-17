@@ -5,7 +5,8 @@
 ## Coordinator:
 Prof. Dr. Tiplea Ferucio-Laurentiu
 ## Team members
-Enache-Stratulat Marius \
+Enache-Stratulat Marius 
+(marius.enache2001@gmail.com) \
 Oprea Ana-Maria (anamariaoprea15@gmail.com) \
 Todireasa Alexandra-Elena (todireasa.alexandra.elena@gmail.com)
 
