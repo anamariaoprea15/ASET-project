@@ -10,8 +10,7 @@ Enache-Stratulat Marius
 Oprea Ana-Maria (anamariaoprea15@gmail.com) \
 Todireasa Alexandra-Elena (todireasa.alexandra.elena@gmail.com)
 
-## Trello
-https://trello.com/b/EO2O5pHj/taip-project
+## [Trello](https://trello.com/b/EO2O5pHj/taip-project)
 
 ## [State-of-the-art doc](https://docs.google.com/document/d/1tS53kTmG01-3zJebqxhoLplUcdAut68DO8N4XVUgMiw/edit?usp=sharing)
 
