@@ -8,7 +8,7 @@ Prof. Dr. Tiplea Ferucio-Laurentiu
 Enache-Stratulat Marius 
 (marius.enache2001@gmail.com) \
 Oprea Ana-Maria (anamariaoprea15@gmail.com) \
-Todireasa Alexandra-Elena (todireasa.alexandra.elena@gmail.com)
+Todireasa Alexandra-Elena (todireasa.alexandra.elena@gmail.com) \
 Lusighian Adrian-Remus (remus.lusighian@gmail.com)
 
 ## [Trello](https://trello.com/b/EO2O5pHj/taip-project)
