@@ -1,6 +1,6 @@
 # ASET-project
 
-2023 project for Advanced Software Engineering Tehniques course at FII UAIC
+2023 project for Advanced Software Engineering Techniques course at FII UAIC
 
 ## Coordinator:
 Prof. Dr. Tiplea Ferucio-Laurentiu
@@ -9,6 +9,7 @@ Enache-Stratulat Marius
 (marius.enache2001@gmail.com) \
 Oprea Ana-Maria (anamariaoprea15@gmail.com) \
 Todireasa Alexandra-Elena (todireasa.alexandra.elena@gmail.com)
+Lusighian Adrian-Remus (remus.lusighian@gmail.com)
 
 ## [Trello](https://trello.com/b/EO2O5pHj/taip-project)
 
