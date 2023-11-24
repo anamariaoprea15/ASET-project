@@ -1,6 +1,14 @@
 import PrangeISD
 import LeeBrickellISD
 
+def log_state_change(func):
+    def wrapper(self, *args, **kwargs):
+        result = func(self, *args, **kwargs)
+        print(f"State changed to: {self.state}")
+        return result
+
+    return wrapper
+
 class ISDAlgorithms:
     def __init__(self):
         self.lee_brickel_isd = LeeBrickellISD()
@@ -8,9 +16,11 @@ class ISDAlgorithms:
         self.state = 'Idle'  # Initial state
         print("The application has started!")
 
+    @log_state_change
     def change_state(self, new_state):
         self.state = new_state
 
+    @log_state_change
     def complexity_analysis(self):
         if self.state == 'Idle':
             print("Starting complexity analysis...")
@@ -25,4 +35,6 @@ class ISDAlgorithms:
     # Add more methods for other states and transitions as needed
 
 if __name__ == "__main__":
-    pass
+    isd_instance = ISDAlgorithms()
+    isd_instance.complexity_analysis()
+    isd_instance.change_state('NewState')
