@@ -10,6 +10,7 @@ def log_syndrome_update(func):
     return wrapper
 
 def log_random_permutation(func):
+    pass
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
         args[0].notify_observers()  # Notify observers after generating a random permutation
@@ -73,7 +74,38 @@ class Tools:
         """
         Computes the reduced row echelon form of the matrix H
         """
-        pass
+        lead = 0
+        rows, cols = H.shape
+
+        for r in range(rows):
+            if lead >= cols:
+                return H
+
+            i = r
+            while H[i, lead] == 0:
+                i += 1
+                if i == rows:
+                    i = r
+                    lead += 1
+                    if cols == lead:
+                        return H
+
+            # Swap rows
+            H[[i, r], :] = H[[r, i], :]
+
+            # Scale the pivot row
+            scale = H[r, lead]
+            H[r, :] = H[r, :] / float(scale)
+
+            # Eliminate other rows
+            for i in range(rows):
+                if i != r:
+                    scale = H[i, lead]
+                    H[i, :] = H[i, :] - H[r, :] * scale
+
+            lead += 1
+
+        return H
 
     def subscribe(self, observer): 
         self._observers.append(observer)
