@@ -1,4 +1,9 @@
 import Tools
+import numpy as np
+	
+MAX_ITERATIONS_INNER = 1000
+MAX_ITERATIONS_OUTER = 100000
+IDEAL_P = 2
 
 class LeeBrickellISD:
     _instance = None
@@ -24,12 +29,43 @@ class LeeBrickellISD:
         # Notify observers after the extract operation
         result = self.extract(H, syndrome)
         self.notify_observers(result)
-
+        
     def attack(self):
-        """
-        Runs the Lee-Brickell attack algorithm
-        """
-        pass
+        inner_iter_counts = []
+        outer_iter_count = 0
+
+        while True:
+            try:
+                P, V, U, inner_iteration_count = self.inner_loop()
+            except:
+                raise Exception("Exiting ISD algorithm, maximum iterations exceeded in inner loop")
+
+            inner_iter_counts.append(inner_iteration_count)
+            r, n = self.tools.H.shape
+            k = n - r
+            s_curr = U * self.tools.syndrome
+            s_curr = s_curr.transpose().list()
+
+            for j in range(k):  # ajustare pentru a evita utilizarea itertools
+                i = self.integer_to_combination(j)
+                s_curr = np.add(V.column(i), s_curr)
+
+                if self.tools.get_array_weight(s_curr) == self.tools.t - IDEAL_P:
+                    e_curr = [0] * k + s_curr.tolist()
+                    for i in range(len(j)):
+                        to_add = [0] * i + [1] + [0] * (r + k - 1 - i)
+                        e_curr = np.add(e_curr, to_add)
+
+                    if self.tools.is_of_desired_weight(e_curr, self.tools.t):
+                        result = np.dot(np.matrix(e_curr), P.T)
+                        if np.dot(self.tools.H, result.transpose()) == self.tools.syndrome:
+                            return result, outer_iter_count, np.mean(inner_iter_counts)
+
+                    if outer_iter_count > MAX_ITERATIONS_OUTER:
+                        raise Exception("Maximum iterations exceeded in outer loop")
+
+            outer_iter_count += 1
+            print("Running outer iteration number %d" % outer_iter_count)
 
     def subscribe(self, observer):
         self._observers.append(observer)
@@ -54,12 +90,16 @@ class ExtractObserver:
 
 # Usage:
 if __name__ == "__main__":
-    lee_brickell_isd_instance = LeeBrickellISD()
+    tools = Tools(4, 8, 2, [0, 1, 0, 1, 1, 0, 1, 0])
+    lee_brickell_isd_instance = LeeBrickellISD(tools)
     extract_observer = ExtractObserver()
-    
+
     lee_brickell_isd_instance.subscribe(extract_observer)
     
     # Simulate the extract operation
-    H = ...
-    syndrome = ...
+    H = np.array([[1, 0, 1, 0],
+                  [0, 1, 1, 1],
+                  [1, 1, 0, 0]])
+    syndrome = np.array([1, 0, 1, 1])
+
     lee_brickell_isd_instance.is_extract(H, syndrome)
