@@ -19,11 +19,15 @@ def log_random_permutation(func):
     return wrapper
 
 class Tools:
-    def __init__(self, r, n, t, syndrome):
+    def __init__(self, k, n, t, syndrome):
+        self.r = n - k
         self.H = np.empty((r, n))
         self.t = t
         self._syndrome = syndrome
         self._observers = []
+    
+    def get_parameters(self):
+        return self.k, self.n, self.r, self.t, self.syndrome
 
     @property
     @log_syndrome_update

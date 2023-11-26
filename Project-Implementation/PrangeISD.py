@@ -1,4 +1,6 @@
 import Tools
+import numpy as np
+from numpy import linalg
 
 class PrangeISD:
     _instance = None
@@ -35,7 +37,29 @@ class PrangeISD:
     def perform_attack(self):
         # Simulate the Prange attack operation
         result = "Simulated attack result"
-        return result
+        k,n,r,t,syndrome = Tools.get_parameters()
+        while True: # outer loop, while weight error is not t
+            while True:
+                P = Tools.generate_random_permuationt(n)
+                H_prim = np.dot(H,P) # H * P
+                T = H_prim[:, n-k:n] # obtinut din H_prim = (K|T), unde T (n-k)x(n-k)
+                # check rank(T) != n - k => then go back to permutation
+                if linalg.matrix_rank(T) == r:
+                     break 
+            # apply elementary row operations to Hp to get RREF
+            #  R * H_prim = (Q|I_n-k)
+            R = Tools.reduced_row_echelon_form(H_prim) # de mofiicat
+        
+            syndrome = np.dot(R,syndrome)
+        
+            if Tools.weight(syndrome) == t:
+                epsi = np.zeros((k, 1))
+                error = np.append(epsi, syndrome)
+            
+                return np.dot(P, error) #P*e,  end of algorithm 
+        
+
+        
 
 # Define an observer class
 class AttackObserver:
