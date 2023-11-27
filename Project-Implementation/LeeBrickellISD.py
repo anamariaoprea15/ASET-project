@@ -1,9 +1,11 @@
 import Tools
 import numpy as np
+import random
 	
 MAX_ITERATIONS_INNER = 1000
 MAX_ITERATIONS_OUTER = 100000
 IDEAL_P = 2
+
 
 class LeeBrickellISD:
     _instance = None
@@ -37,6 +39,12 @@ class LeeBrickellISD:
             remaining_numbers.remove(selected_index)
 
         return combination
+   
+    def is_desired_weight(self, e, t):
+        """
+        Checks if the weight of the error vector e is equal to the desired weight t.
+        """
+        return self.tools.weight(e) == t
     
     def is_extract(self, H, syndrome):
         # Perform the extract operation
@@ -60,17 +68,20 @@ class LeeBrickellISD:
             s_curr = U * self.tools.syndrome
             s_curr = s_curr.transpose().list()
 
-            for j in range(k):  # ajustare pentru a evita utilizarea itertools
+
+    # For each column j of the matrix V, add to the vector s_curr the column corresponding to the set i
+
+            for j in range(k):  
                 i = self.integer_to_combination(j)
                 s_curr = np.add(V.column(i), s_curr)
 
-                if self.tools.get_array_weight(s_curr) == self.tools.t - IDEAL_P:
+                if self.tools.weight(s_curr) == self.tools.t - IDEAL_P:
                     e_curr = [0] * k + s_curr.tolist()
                     for i in range(len(j)):
                         to_add = [0] * i + [1] + [0] * (r + k - 1 - i)
                         e_curr = np.add(e_curr, to_add)
 
-                    if self.tools.is_of_desired_weight(e_curr, self.tools.t):
+                    if self.is_desired_weight(e_curr, self.tools.t):
                         result = np.dot(np.matrix(e_curr), P.T)
                         if np.dot(self.tools.H, result.transpose()) == self.tools.syndrome:
                             return result, outer_iter_count, np.mean(inner_iter_counts)
@@ -116,4 +127,4 @@ if __name__ == "__main__":
                   [1, 1, 0, 0]])
     syndrome = np.array([1, 0, 1, 1])
 
-    lee_brickell_isd_instance.is_extract(H, syndrome)
+    lee_brickell_isd_instance.attack()
