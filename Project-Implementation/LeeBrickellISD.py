@@ -22,8 +22,22 @@ class LeeBrickellISD:
         self._observers = []
 
     def integer_to_combination(self, j):
-        pass
+        """
+        Converts an integer j into a set of p distinct integers in {0, ..., k-1}.
+        """
+        k = self.tools.n - self.tools.r  # Computes k based on the dimensions of the H matrix
+        p = IDEAL_P
 
+        combination = set()
+        remaining_numbers = list(range(k))
+
+        while len(combination) < p:
+            selected_index = random.choice(remaining_numbers)
+            combination.add(selected_index)
+            remaining_numbers.remove(selected_index)
+
+        return combination
+    
     def is_extract(self, H, syndrome):
         # Perform the extract operation
         # Notify observers after the extract operation
