@@ -62,6 +62,7 @@ class LeeBrickellISD:
             except:
                 raise Exception("Exiting ISD algorithm, maximum iterations exceeded in inner loop")
 
+          #the counters are updated, and the current state of the syndrome is prepared
             inner_iter_counts.append(inner_iteration_count)
             r, n = self.tools.H.shape
             k = n - r
@@ -75,6 +76,8 @@ class LeeBrickellISD:
                 i = self.integer_to_combination(j)
                 s_curr = np.add(V.column(i), s_curr)
 
+            #the weight of the vector s_curr is checked to see if it corresponds to a valid code
+            # if the condition is met the error vector e_curr is constructed
                 if self.tools.weight(s_curr) == self.tools.t - IDEAL_P:
                     e_curr = [0] * k + s_curr.tolist()
                     for i in range(len(j)):
