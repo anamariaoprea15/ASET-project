@@ -21,7 +21,7 @@ def log_random_permutation(func):
 class Tools:
     def __init__(self, k, n, t, syndrome):
         self.r = n - k
-        self.H = np.empty((r, n))
+        self.H = np.empty((self.r, n))
         self.t = t
         self._syndrome = syndrome
         self._observers = []
@@ -76,14 +76,25 @@ class Tools:
 
     def reduced_row_echelon_form(self, H):
         """
-        Computes the reduced row echelon form of the matrix H
+        Computes the reduced row echelon form of the matrix H and
+        returns the transformation matrix P, such that H x P = reduced_row_echelon_form(H)
+
+        P gets initialized as the identity matrix, so H x P = H
+        Using a lead index, we iterate through H and swap each row with the first row met beneath
+        (or itself) that does not have the value 0 in the lead position. Afterwards, we scale the
+        given row r, dividing it by the lead value, and subtract the initial value of the row from
+        the other rows.
+
+        Every change that gets applied to H will be applied to P respectively, so as to obtain
+        the matrix P such that H x P = reduced_row_echelon_form(H).
         """
         lead = 0
         rows, cols = H.shape
+        P = np.identity(cols)  # Initialize P as the identity matrix
 
         for r in range(rows):
             if lead >= cols:
-                return H
+                return P
 
             i = r
             while H[i, lead] == 0:
@@ -92,24 +103,28 @@ class Tools:
                     i = r
                     lead += 1
                     if cols == lead:
-                        return H
+                        return P
 
-            # Swap rows
+            # Swap rows in both H and P
             H[[i, r], :] = H[[r, i], :]
+            P[[i, r], :] = P[[r, i], :]
 
             # Scale the pivot row
             scale = H[r, lead]
             H[r, :] = H[r, :] / float(scale)
+            P[r, :] = P[r, :] / float(scale)
 
-            # Eliminate other rows
+            # Subtract from other rows
             for i in range(rows):
                 if i != r:
                     scale = H[i, lead]
                     H[i, :] = H[i, :] - H[r, :] * scale
+                    P[i, :] = P[i, :] - P[r, :] * scale
 
             lead += 1
 
-        return H
+        return P
+
 
     def subscribe(self, observer): 
         self._observers.append(observer)
