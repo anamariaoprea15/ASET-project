@@ -76,8 +76,8 @@ class Tools:
 
     def reduced_row_echelon_form(self, H):
         """
-        Computes the reduced row echelon form of the matrix H and
-        returns the transformation matrix P, such that H x P = reduced_row_echelon_form(H)
+        Computes and returns the reduced row echelon form of the matrix H
+        and the transformation matrix P, such that H x P = RREF(H)
 
         P gets initialized as the identity matrix, so H x P = H
         Using a lead index, we iterate through H and swap each row with the first row met beneath
@@ -86,15 +86,15 @@ class Tools:
         the other rows.
 
         Every change that gets applied to H will be applied to P respectively, so as to obtain
-        the matrix P such that H x P = reduced_row_echelon_form(H).
+        the transformation matrix P needed.
         """
-        lead = 0
-        rows, cols = H.shape
+        lead = 0 # initial lead position
+        rows, cols = H.shape # dimensions of H
         P = np.identity(cols)  # Initialize P as the identity matrix
 
         for r in range(rows):
             if lead >= cols:
-                return P
+                return H, P
 
             i = r
             while H[i, lead] == 0:
@@ -103,7 +103,7 @@ class Tools:
                     i = r
                     lead += 1
                     if cols == lead:
-                        return P
+                        return H, P
 
             # Swap rows in both H and P
             H[[i, r], :] = H[[r, i], :]
@@ -123,7 +123,7 @@ class Tools:
 
             lead += 1
 
-        return P
+        return H, P
 
 
     def subscribe(self, observer): 
