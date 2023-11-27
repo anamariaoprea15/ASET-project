@@ -164,13 +164,8 @@ class GoppaCodeGenerator:
         H_bin = self.from_list(H_bin.reshape(-1, H.shape[1]))
         print(f"H_bin=\n{H_bin}")
 
-        # H_nullspace, nullity = H_bin.nullspace()
-        # log.debug(f"H_nullspace({nullity})=\n{H_nullspace}")
-        # G = GF2Matrix(H_nullspace.T()[:nullity])
-
         G = H_bin
-        print(f"G=\n{G}")
-        # print(f"G*H^T=\n{G * H_bin.T()}")
+        
         return G, H_bin, g_poly, irr_poly
 
 
