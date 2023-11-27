@@ -1,6 +1,7 @@
 import Tools
 import numpy as np
 import random
+from numpy import linalg
 	
 MAX_ITERATIONS_INNER = 1000
 MAX_ITERATIONS_OUTER = 100000
@@ -52,48 +53,35 @@ class LeeBrickellISD:
         result = self.extract(H, syndrome)
         self.notify_observers(result)
         
+       
     def attack(self):
-        inner_iter_counts = []
-        outer_iter_count = 0
+        k, n, r, t, syndrome = Tools.get_parameters()
 
         while True:
-            try:
-                P, V, U, inner_iteration_count = self.inner_loop()
-            except:
-                raise Exception("Exiting ISD algorithm, maximum iterations exceeded in inner loop")
+            while True:
+                P = Tools.generate_random_permutation(n)
+                H_prim = np.dot(self.H, P)
+                T = H_prim[:, n - k:n]
 
-          #the counters are updated, and the current state of the syndrome is prepared
-            inner_iter_counts.append(inner_iteration_count)
-            r, n = self.tools.H.shape
-            k = n - r
-            s_curr = U * self.tools.syndrome
-            s_curr = s_curr.transpose().list()
+                # check rank(T) != n - k 
+                if linalg.matrix_rank(T) == r:
+                    break
+                
+            R = self.reduced_row_echelon_form(H_prim)
+            syndrome = np.dot(R, syndrome)
 
+            # Lee-Brickell specific steps
+            #For small p, pick p of the k columns on the left, compute their sum Xp
+            for p in range(1, t + 1):
+                # Choose p of the k columns on the left, compute their sum Xp
+                selected_columns = np.random.choice(range(k), p, replace=False)
+                Xp = np.sum(H_prim[:, selected_columns], axis=1)
 
-    # For each column j of the matrix V, add to the vector s_curr the column corresponding to the set i
+                # Check if wt(s_0 + Xp) == t - p
+                if self.weight(syndrome + Xp) == t - p:
+                    e_prim = np.concatenate((np.zeros((k, 1)), syndrome + Xp))
+                    return np.dot(P, e_prim)      
 
-            for j in range(k):  
-                i = self.integer_to_combination(j)
-                s_curr = np.add(V.column(i), s_curr)
-
-            #the weight of the vector s_curr is checked to see if it corresponds to a valid code
-            # if the condition is met the error vector e_curr is constructed
-                if self.tools.weight(s_curr) == self.tools.t - IDEAL_P:
-                    e_curr = [0] * k + s_curr.tolist()
-                    for i in range(len(j)):
-                        to_add = [0] * i + [1] + [0] * (r + k - 1 - i)
-                        e_curr = np.add(e_curr, to_add)
-
-                    if self.is_desired_weight(e_curr, self.tools.t):
-                        result = np.dot(np.matrix(e_curr), P.T)
-                        if np.dot(self.tools.H, result.transpose()) == self.tools.syndrome:
-                            return result, outer_iter_count, np.mean(inner_iter_counts)
-
-                    if outer_iter_count > MAX_ITERATIONS_OUTER:
-                        raise Exception("Maximum iterations exceeded in outer loop")
-
-            outer_iter_count += 1
-            print("Running outer iteration number %d" % outer_iter_count)
 
     def subscribe(self, observer):
         self._observers.append(observer)
