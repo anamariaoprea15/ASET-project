@@ -48,7 +48,7 @@ class PrangeISD:
                      break 
             # apply elementary row operations to Hp to get RREF
             #  R * H_prim = (Q|I_n-k)
-            R = Tools.reduced_row_echelon_form(H_prim) # de mofiicat
+            H, R = Tools.reduced_row_echelon_form(H_prim) # de mofiicat
         
             syndrome = np.dot(R,syndrome)
         

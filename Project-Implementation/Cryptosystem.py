@@ -6,7 +6,7 @@ class CryptosystemFactory:
     @staticmethod
     def create_instance(n, k, t):
         # Create and return an instance of McEliece Cryptosystem
-        return McElieveCryptosystem(n, k, t)
+        return McElieceCryptosystem(n, k, t)
 
 # decorator design pattern
 class EncryptionDecorator:
@@ -20,7 +20,7 @@ class EncryptionDecorator:
 
     def decrypt(self, cipher):
         # Add decryption
-        return self._cryptosystem.decrypt(decrypted_cipher)
+        return self._cryptosystem.decrypt(cipher)
 
 class McElieceCryptosystem:
 
@@ -62,5 +62,6 @@ if __name__ == "__main__":
     # add decorator
     crypto_with_encryption = EncryptionDecorator(crypto_instance)
     # use decorator to encrypt and decrypt messages
+    error_vector = ""
     encrypted_message = crypto_with_encryption.encrypt("Hello, world!", error_vector)
     decrypted_message = crypto_with_encryption.decrypt(encrypted_message)
