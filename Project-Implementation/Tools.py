@@ -9,8 +9,7 @@ def log_syndrome_update(func):
 
     return wrapper
 
-def log_random_permutation(func):
-    pass
+def log_random_permutation(func):
     def wrapper(*args, **kwargs):
         result = func(*args, **kwargs)
         args[0].notify_observers()  # Notify observers after generating a random permutation
