@@ -21,7 +21,7 @@ class LeeBrickellISD:
         """
         Instantiates the Lee-Brickell class
         """
-        self.tools = Tools()
+        self.tools = Tools.Tools(4, 8, 2, [0, 1, 0, 1, 1, 0, 1, 0])
         self._observers = []
 
     def integer_to_combination(self, j):
@@ -106,7 +106,7 @@ class ExtractObserver:
 
 # Usage:
 if __name__ == "__main__":
-    tools = Tools(4, 8, 2, [0, 1, 0, 1, 1, 0, 1, 0])
+    tools = Tools.Tools(4, 8, 2, [0, 1, 0, 1, 1, 0, 1, 0])
     lee_brickell_isd_instance = LeeBrickellISD(tools)
     extract_observer = ExtractObserver()
 

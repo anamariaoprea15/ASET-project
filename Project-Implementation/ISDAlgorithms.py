@@ -11,8 +11,8 @@ def log_state_change(func):
 
 class ISDAlgorithms:
     def __init__(self):
-        self.lee_brickel_isd = LeeBrickellISD()
-        self.Prange_isd = PrangeISD()
+        self.lee_brickel_isd = LeeBrickellISD.LeeBrickellISD()
+        self.Prange_isd = PrangeISD.PrangeISD()
         self.state = 'Idle'  # Initial state
         print("The application has started!")
 

@@ -15,7 +15,7 @@ class PrangeISD:
         """
         Instantiates the Prange class
         """
-        self.tools = Tools()
+        self.tools = Tools.Tools(4, 8, 2, [0, 1, 0, 1, 1, 0, 1, 0])
         self._observers = []
 
     def attack(self):
