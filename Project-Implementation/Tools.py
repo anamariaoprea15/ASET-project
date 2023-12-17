@@ -106,8 +106,8 @@ class Tools:
             np.random.shuffle(positions)
 
             result = np.eye(n, dtype=int)[positions]
-            print("Random permutation generated.")  # Just for testing 
-            print(result)
+            #print("Random permutation generated.")  # Just for testing 
+            #print(result)
 
          # Check if the syndrome has changed before notifying observers
             if old_syndrome != self.syndrome:
@@ -192,10 +192,11 @@ class Tools:
 
 class SyndromeObserver:
     def update(self, tools):
-        # Handle the updated syndrome
-        print("Syndrome has been updated:", tools.syndrome)
-
-
+        try:
+            # Handle the updated syndrome
+            print("Syndrome has been updated:", tools.syndrome)
+        except Exception as e:
+            logging.error(f"Error in updating syndrome: {e}")
 
 # Usage example:
 if __name__ == "__main__":
