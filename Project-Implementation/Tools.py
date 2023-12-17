@@ -143,7 +143,9 @@ class Tools:
         """
         lead = 0  # initial lead position
         rows, cols = H.shape  # dimensions of H
-        P = np.identity(cols)  # Initialize P as the identity matrix
+        
+        max_dimension = max(rows, cols)
+        P = np.identity(max_dimension)  # Initialize P as the identity matrix
 
         for r in range(rows):
             if lead >= cols:
@@ -166,8 +168,8 @@ class Tools:
             scale = H[r, lead]
             H[r, :] = H[r, :] / float(scale)
             P[r, :] = P[r, :] / float(scale)
-
             # Subtract from other rows
+
             for i in range(rows):
                 if i != r:
                     scale = H[i, lead]
