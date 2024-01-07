@@ -2,15 +2,16 @@ from Tools import Tools
 import numpy as np
 import threading
 import psutil
-from pprint import pprint
 import time
 import logging
 import concurrent.futures
+import matplotlib.pyplot as plt
 
 # Configure the logging system
 logging.basicConfig(filename='monitoring.log', level=logging.DEBUG)
 
 execution_times = []
+lock = threading.Lock()
 
 tools = Tools(4, 8, 2, [0, 1, 0, 1, 1, 0, 1, 0])
 
@@ -87,18 +88,64 @@ def monitor_resource_utilization(test_function, *args):
 
     return resource_utilization
 
-def perform_concurrent_operation(tools, thread_id):
+def performance_test_with_threads(tools, n_values, num_threads):
+    thread_execution_times = []
+
+    for n in n_values:
+        # Clear the execution_times list before each performance test
+        global execution_times
+        execution_times = []
+
+        # Simulate concurrent execution using threads
+        threads = []
+
+        for i in range(num_threads):
+            # Pass 'tools', 'i', 'n', and 'lock' as arguments to perform_concurrent_operation
+            thread = threading.Thread(target=perform_concurrent_operation, args=(tools, i, n, lock))
+            threads.append(thread)
+            thread.start()
+
+        # Wait for all threads to complete (this line should be outside the loop above)
+        for thread in threads:
+            thread.join()
+
+        avg_execution_time = sum(execution_times) / len(execution_times)
+        thread_execution_times.append(avg_execution_time)
+
+    return thread_execution_times
+
+# Function to perform concurrent operation
+def perform_concurrent_operation(tools, thread_id, n, lock):
+    global execution_times  # Access the global execution_times list
+
     start_time = time.time()
     try:
         # Replace this with the operation you want to test
-        result = tools.generate_random_permutation(4)
-        print(f"Thread {thread_id} completed.")
+        result = tools.generate_random_permutation(n)
     except Exception as e:
         print(f"Thread {thread_id} failed with exception: {e}")
     finally:
-        end_time = time.time()
-        execution_time = end_time - start_time
-        execution_times.append(execution_time)
+        with lock:
+            end_time = time.time()
+            execution_time = end_time - start_time
+            execution_times.append(execution_time)
+
+# Define the parameters for performance testing
+performance_test_n_values = [100, 500, 1000]  # Adjust as needed
+num_threads_values = [5, 25, 100]  # Adjust as needed
+
+# Perform performance testing with varying numbers of threads
+for num_threads in num_threads_values:
+    thread_execution_times = performance_test_with_threads(tools, performance_test_n_values, num_threads)
+
+    # Plot the graph
+    plt.plot(performance_test_n_values, thread_execution_times, label=f'{num_threads} Threads')
+
+# Add labels and legend to the plot
+plt.xlabel('Matrix Size (n)')
+plt.ylabel('Average Execution Time (seconds)')
+plt.legend(title='Number of Threads')
+plt.title('Performance with Varying Number of Threads')
 
 # Stress test the generate_random_permutation method with 10,000 concurrent executions
 stress_test_iterations = 100000
@@ -138,7 +185,7 @@ threads = []
 execution_times = []
 
 for i in range(concurrent_test_threads):
-    thread = threading.Thread(target=perform_concurrent_operation, args=(tools, i))
+    thread = threading.Thread(target=perform_concurrent_operation, args=(tools, i, 100, lock))  # Adjust '100' as needed
     threads.append(thread)
     thread.start()
 
@@ -170,3 +217,6 @@ for n, execution_time in zip(performance_test_n_values, performance_test_executi
 
 # Resource Utilization Test: generate_random_permutation
 monitor_resource_utilization(performance_test_generate_random_permutation, tools, 50)  # Adjust the value of 'n'
+
+# Show the plot
+plt.show()
