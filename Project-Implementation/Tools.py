@@ -127,58 +127,43 @@ class Tools:
         """
         return np.linalg.norm(e, ord=0)
 
-    def reduced_row_echelon_form(self, H):
+    def reduced_row_echelon_form(self, matrice):
         """
-        Computes and returns the reduced row echelon form of the matrix H
-        and the transformation matrix P, such that H x P = RREF(H)
-
-        P gets initialized as the identity matrix, so H x P = H
-        Using a lead index, we iterate through H and swap each row with the first row met beneath
-        (or itself) that does not have the value 0 in the lead position. Afterwards, we scale the
-        given row r, dividing it by the lead value, and subtract the initial value of the row from
-        the other rows.
-
-        Every change that gets applied to H will be applied to P respectively, so as to obtain
-        the transformation matrix P needed.
+        Implementation proposed by Microsoft Copilot (Chat-GPT 4.0)
         """
-        lead = 0  # initial lead position
-        rows, cols = H.shape  # dimensions of H
+        matrice = np.array(matrice, dtype=np.float64)
         
-        max_dimension = max(rows, cols)
-        P = np.identity(max_dimension)  # Initialize P as the identity matrix
+        # Numărul de rânduri și coloane
+        r, c = matrice.shape
 
-        for r in range(rows):
-            if lead >= cols:
-                return H, P
+        # Indexul curent pentru rând și coloană
+        r_i = c_i = 0
 
-            i = r
-            while H[i, lead] == 0:
-                i += 1
-                if i == rows:
-                    i = r
-                    lead += 1
-                    if cols == lead:
-                        return H, P
+        while True:
+            if r_i >= r or c_i >= c:
+                break
 
-            # Swap rows in both H and P
-            H[[i, r], :] = H[[r, i], :]
-            P[[i, r], :] = P[[r, i], :]
+            # Găsește valoarea maximă în coloana curentă
+            max_val = np.abs(matrice[r_i:, c_i]).argmax() + r_i
+            if matrice[max_val, c_i] == 0:
+                c_i += 1
+                continue
 
-            # Scale the pivot row
-            scale = H[r, lead]
-            H[r, :] = H[r, :] / float(scale)
-            P[r, :] = P[r, :] / float(scale)
-            # Subtract from other rows
+            # Schimbă rândurile
+            matrice[[r_i, max_val]] = matrice[[max_val, r_i]]
 
-            for i in range(rows):
-                if i != r:
-                    scale = H[i, lead]
-                    H[i, :] = H[i, :] - H[r, :] * scale
-                    P[i, :] = P[i, :] - P[r, :] * scale
+            # Normalizează rândul curent
+            matrice[r_i] = matrice[r_i] / matrice[r_i, c_i]
 
-            lead += 1
+            # Zero în restul coloanei
+            for i in range(0, r):
+                if i != r_i:
+                    matrice[i] = matrice[i] - matrice[r_i] * matrice[i, c_i]
 
-        return H, P
+            r_i += 1
+            c_i += 1
+
+        return matrice
 
     def subscribe(self, observer):
         self._observers.append(observer)
