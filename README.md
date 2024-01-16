@@ -16,3 +16,5 @@ Lusighian Adrian-Remus (remus.lusighian@gmail.com)
 ## [State-of-the-art doc](https://docs.google.com/document/d/1tS53kTmG01-3zJebqxhoLplUcdAut68DO8N4XVUgMiw/edit?usp=sharing)
 
 ## [Requirements analysis](https://docs.google.com/document/d/16qP5dN6Jk-YtcWA13b7GcP4S7pxrx8MVdH47VIIQxJQ/edit?usp=sharing)
+
+## [Technical Report](https://www.overleaf.com/project/65a0ffefc69ede84bf548a92)
